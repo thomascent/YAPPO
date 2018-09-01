@@ -1,4 +1,3 @@
-from OpenGL import GLU
 from datetime import datetime, timedelta
 from functools import wraps
 import tensorflow as tf
