@@ -148,7 +148,9 @@ class PPO(object):
             episodes = np.count_nonzero(segment.dones) + 1
             returns = np.sum(segment.rewards)
 
-            total_timesteps, total_episodes, total_returns = map(sum, zip(*MPI.COMM_WORLD.allgather([timesteps, episodes, returns])))
+            info_titles = segment.infos[0].keys()
+            infos = [sum(info[key] for info in segment.infos) for key in info_titles]
+            total_timesteps, total_episodes, total_returns, *info_totals = map(sum, zip(*MPI.COMM_WORLD.allgather([timesteps, episodes, returns] + infos)))
             timesteps_so_far += total_timesteps
 
             episodes_so_far += total_episodes
@@ -168,7 +170,10 @@ class PPO(object):
 
             logger.record_tabular('Explained Variance TD(lam)', explained_variance(value_predictions_before, td_lambda_return))
 
-            for (lossval, name) in zipsame(mean_losses, self.loss_names):
+            for info_total, name in zipsame(info_totals, info_titles):
+                logger.record_tabular(name, info_total)
+
+            for lossval, name in zipsame(mean_losses, self.loss_names):
                 logger.record_tabular(name, lossval)
 
             if user_callback is not None:

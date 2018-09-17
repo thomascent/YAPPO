@@ -5,6 +5,7 @@ setup(name='YAPPO',
       description='Yet another proximal policy optimisation implementation',
       author='Tom Stewart',
       author_email='thomas@ascent.ai',
+      license='Proprietary',
       packages=['YAPPO'],
       zip_safe=False)
 
