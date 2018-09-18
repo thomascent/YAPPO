@@ -171,7 +171,7 @@ class PPO(object):
             logger.record_tabular('Explained Variance TD(lam)', explained_variance(value_predictions_before, td_lambda_return))
 
             for info_total, name in zipsame(info_totals, info_titles):
-                logger.record_tabular(name, info_total)
+                logger.record_tabular(name, info_total / total_episodes)
 
             for lossval, name in zipsame(mean_losses, self.loss_names):
                 logger.record_tabular(name, lossval)
